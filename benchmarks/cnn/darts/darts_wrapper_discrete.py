@@ -142,7 +142,7 @@ class DartsWrapper:
             logging.info("Resuming from epoch %d" % self.epochs)
             self.objs = utils.AvgrageMeter()
             self.top1 = utils.AvgrageMeter()
-            self.top5 = utils.AvgrageMeter()
+            #self.top5 = utils.AvgrageMeter()
             for i in range(self.epochs):
                 self.scheduler.step()
 
@@ -161,7 +161,7 @@ class DartsWrapper:
         self.scheduler.step()
         self.objs = utils.AvgrageMeter()
         self.top1 = utils.AvgrageMeter()
-        self.top5 = utils.AvgrageMeter()
+        #self.top5 = utils.AvgrageMeter()
       lr = self.scheduler.get_lr()[0]
 
       weights = self.get_weights_from_arch(arch)
@@ -187,16 +187,19 @@ class DartsWrapper:
       nn.utils.clip_grad_norm(self.model.parameters(), args.grad_clip)
       self.optimizer.step()
 
-      prec1, prec5 = utils.accuracy(logits, target, topk=(1, 5))
+      #prec1, prec5 = utils.accuracy(logits, target, topk=(1, 5))
+      prec1 = utils.accuracy(logits, target, topk=(1,))
       #self.objs.update(loss.data[0], n)
       #self.top1.update(prec1.data[0], n)
       #self.top5.update(prec5.data[0], n)
       self.objs.update(loss.data, n)
       self.top1.update(prec1.data, n)
-      self.top5.update(prec5.data, n)
+      #self.top5.update(prec5.data, n)
 
       if step % args.report_freq == 0:
-        logging.info('train %03d %e %f %f', step, self.objs.avg, self.top1.avg, self.top5.avg)
+        #logging.info('train %03d %e %f %f', step, self.objs.avg, self.top1.avg, self.top5.avg)
+        logging.info('train %03d %e %f %f', step, self.objs.avg, self.top1.avg)
+
 
       self.steps += 1
       if self.steps % len(self.train_queue) == 0:
@@ -245,14 +248,15 @@ class DartsWrapper:
         logits = self.model(input, discrete=True)
         loss = self.criterion(logits, target)
 
-        prec1, prec5 = utils.accuracy(logits, target, topk=(1, 5))
+        #prec1, prec5 = utils.accuracy(logits, target, topk=(1, 5))
+        prec1,= utils.accuracy(logits, target, topk=(1,))
         n = input.size(0)
         #objs.update(loss.data[0], n)
         #top1.update(prec1.data[0], n)
         #top5.update(prec5.data[0], n)
         objs.update(loss.data, n)
         top1.update(prec1.data, n)
-        top5.update(prec5.data, n)
+        #top5.update(prec5.data, n)
         
         #minha alteracao
         _, predicted = torch.max(logits.data, 1)
