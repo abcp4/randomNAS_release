@@ -189,12 +189,13 @@ class DartsWrapper:
 
       #prec1, prec5 = utils.accuracy(logits, target, topk=(1, 5))
       prec1 = utils.accuracy(logits, target, topk=(1,))
-      print('prec:',prec1.item())
+      print('prec:',prec1)
+      print('prec:',prec1[0].item() )
       #self.objs.update(loss.data[0], n)
       #self.top1.update(prec1.data[0], n)
       #self.top5.update(prec5.data[0], n)
       self.objs.update(loss.data, n)
-      self.top1.update(prec1.data.item(), n)
+      self.top1.update(prec1.data[0].item(), n)
       #self.top5.update(prec5.data, n)
 
       if step % args.report_freq == 0:
