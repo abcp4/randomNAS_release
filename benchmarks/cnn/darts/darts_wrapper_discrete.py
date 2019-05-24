@@ -199,7 +199,7 @@ class DartsWrapper:
 
       if step % args.report_freq == 0:
         #logging.info('train %03d %e %f %f', step, self.objs.avg, self.top1.avg, self.top5.avg)
-        logging.info('train %03d %e %f', step, self.objs.avg)
+        logging.info('train %03d %e', step, self.objs.avg)
 
 
       self.steps += 1
@@ -266,7 +266,9 @@ class DartsWrapper:
         targets = np.concatenate((targets,target.cpu().numpy().ravel()))
         
         if step % self.args.report_freq == 0:
-          logging.info('valid %03d %e %f %f', step, objs.avg, top1.avg, top5.avg)
+          #logging.info('valid %03d %e %f %f', step, objs.avg, top1.avg, top5.avg)
+          logging.info('valid %03d %e', step, objs.avg)
+
 
       print(preds.shape)
       print(targets.shape)
