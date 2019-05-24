@@ -256,6 +256,7 @@ class DartsWrapper:
         #top1.update(prec1.data[0], n)
         #top5.update(prec5.data[0], n)
         objs.update(loss.data, n)
+        print('prec:',prec1)
         top1.update(prec1[0].item(), n)
         #top5.update(prec5.data, n)
         
