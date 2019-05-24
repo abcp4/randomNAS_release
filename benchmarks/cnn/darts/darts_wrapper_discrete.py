@@ -199,7 +199,7 @@ class DartsWrapper:
 
       if step % args.report_freq == 0:
         #logging.info('train %03d %e %f %f', step, self.objs.avg, self.top1.avg, self.top5.avg)
-        logging.info('train %03d %e', step, self.objs.avg)
+        logging.info('train %03d %e %f', step, self.objs.avg,self.top1.avg)
 
 
       self.steps += 1
@@ -256,7 +256,7 @@ class DartsWrapper:
         #top1.update(prec1.data[0], n)
         #top5.update(prec5.data[0], n)
         objs.update(loss.data, n)
-        print('prec:',prec1)
+        #print('prec:',prec1)
         top1.update(prec1.item(), n)
         #top5.update(prec5.data, n)
         
@@ -267,7 +267,7 @@ class DartsWrapper:
         
         if step % self.args.report_freq == 0:
           #logging.info('valid %03d %e %f %f', step, objs.avg, top1.avg, top5.avg)
-          logging.info('valid %03d %e', step, objs.avg)
+          logging.info('valid %03d %e %f', step, objs.avg,top1.avg)
 
 
       print(preds.shape)
