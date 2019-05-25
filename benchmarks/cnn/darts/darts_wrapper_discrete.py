@@ -96,7 +96,7 @@ class DartsWrapper:
         n_train = len(train_data)
         n_val = len(valid_data)
         indices1 = list(range(n_train))
-        indices2 = list(range(valid_data))
+        indices2 = list(range(n_val))
         train_sampler = torch.utils.data.sampler.SubsetRandomSampler(indices1)
         valid_sampler = torch.utils.data.sampler.SubsetRandomSampler(indices2)
         self.train_queue = torch.utils.data.DataLoader(
