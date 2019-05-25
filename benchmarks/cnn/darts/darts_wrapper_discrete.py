@@ -92,12 +92,21 @@ class DartsWrapper:
         train_data = dset.ImageFolder('/content/data/train',transform=t)
         valid_data = dset.ImageFolder('/content/data/valid',transform=t)
         print('loaded data')
+        # split data to train/validation
+        n_train = len(train_data)
+        n_val = len(valid_data)
+        indices1 = list(range(n_train))
+        indices2 = list(range(valid_data))
+        train_sampler = torch.utils.data.sampler.SubsetRandomSampler(indices1)
+        valid_sampler = torch.utils.data.sampler.SubsetRandomSampler(indices2)
         self.train_queue = torch.utils.data.DataLoader(
           train_data, batch_size=args.batch_size,
+          sampler=train_sampler,
           pin_memory=True, num_workers=0, worker_init_fn=np.random.seed(args.seed))
 
         self.valid_queue = torch.utils.data.DataLoader(
           valid_data, batch_size=args.batch_size,
+          sampler=valid_sampler,
           pin_memory=True, num_workers=0, worker_init_fn=np.random.seed(args.seed))
         
 
