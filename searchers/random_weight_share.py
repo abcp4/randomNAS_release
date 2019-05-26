@@ -146,8 +146,12 @@ def main(args):
         from benchmarks.ptb.darts.darts_wrapper_discrete import DartsWrapper
         model = DartsWrapper(save_dir, args.seed, args.batch_size, args.grad_clip, config=args.config)
     elif args.benchmark=='cnn':
+        paths = {}
+        paths['train'] = args.train_path
+        paths['valid'] = args.valid_path
+        paths['test'] = args.test_path
         from benchmarks.cnn.darts.darts_wrapper_discrete import DartsWrapper
-        model = DartsWrapper(save_dir, args.seed, args.batch_size, args.grad_clip, args.epochs, init_channels=args.init_channels)
+        model = DartsWrapper(save_dir, args.seed, args.batch_size, args.grad_clip, args.epochs, init_channels=args.init_channels, nclasses = args.nclasses,paths = paths)
 
     searcher = Random_NAS(B, model, args.seed, save_dir)
     logging.info('budget: %d' % (searcher.B))
@@ -173,6 +177,11 @@ if __name__ == "__main__":
     parser.add_argument('--grad_clip', dest='grad_clip', type=float, default=0.25)
     parser.add_argument('--save_dir', dest='save_dir', type=str, default=None)
     parser.add_argument('--eval_only', dest='eval_only', type=int, default=0)
+    parser.add_argument('--nclasses', dest='nclasses', type=int, default=0)
+    parser.add_argument('--train_path', dest='paths', type=str, default='')
+    parser.add_argument('--valid_path', dest='paths', type=str, default='')
+    parser.add_argument('--test_path', dest='paths', type=str, default='')
+    
     # PTB only argument. config=search uses proxy network for shared weights while
     # config=eval uses proxyless network for shared weights.
     parser.add_argument('--config', dest='config', type=str, default="search")
