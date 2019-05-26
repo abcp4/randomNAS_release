@@ -178,9 +178,9 @@ if __name__ == "__main__":
     parser.add_argument('--save_dir', dest='save_dir', type=str, default=None)
     parser.add_argument('--eval_only', dest='eval_only', type=int, default=0)
     parser.add_argument('--nclasses', dest='nclasses', type=int, default=0)
-    parser.add_argument('--train_path', dest='paths', type=str, default='')
-    parser.add_argument('--valid_path', dest='paths', type=str, default='')
-    parser.add_argument('--test_path', dest='paths', type=str, default='')
+    parser.add_argument('--train_path', dest='train_path', type=str, default='')
+    parser.add_argument('--valid_path', dest='valid_path', type=str, default='')
+    parser.add_argument('--test_path', dest='test_path', type=str, default='')
     
     # PTB only argument. config=search uses proxy network for shared weights while
     # config=eval uses proxyless network for shared weights.
