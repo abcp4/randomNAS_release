@@ -25,7 +25,7 @@ class AttrDict(dict):
         self.__dict__ = self
 
 class DartsWrapper:
-    def __init__(self, save_path, seed, batch_size, grad_clip, epochs, resume_iter=None, init_channels=16):
+    def __init__(self, save_path, seed, batch_size, grad_clip, epochs, resume_iter=None, init_channels=16,paths = None,nclasses = 10):
         args = {}
         args['data'] = '/content/data/'
         args['epochs'] = epochs
@@ -83,14 +83,14 @@ class DartsWrapper:
         """
         
         from torchvision import transforms
-        nclasses = 3
+        #nclasses = 3
         t = transforms.Compose([
             # you can add other transformations in this list
             transforms.Resize((64,64), interpolation=2),
             transforms.ToTensor()
         ])
-        train_data = dset.ImageFolder('/content/data/train',transform=t)
-        valid_data = dset.ImageFolder('/content/data/valid',transform=t)
+        train_data = dset.ImageFolder(paths['train'],transform=t)
+        valid_data = dset.ImageFolder(paths['valid'],transform=t)
         print('loaded data')
         # split data to train/validation
         n_train = len(train_data)
