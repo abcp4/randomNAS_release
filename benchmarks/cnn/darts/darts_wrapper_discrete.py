@@ -61,7 +61,7 @@ class DartsWrapper:
         torch.cuda.manual_seed_all(args.seed)
 
     
-        """
+        
         train_transform, valid_transform = utils._data_transforms_cifar10(args)
         train_data = dset.CIFAR10(root=args.data, train=True, download=True, transform=train_transform)
         print('loaded data')
@@ -97,7 +97,7 @@ class DartsWrapper:
         self.valid_queue = torch.utils.data.DataLoader(
           valid_data, batch_size=args.batch_size,
           pin_memory=True, num_workers=0, worker_init_fn=np.random.seed(args.seed))
-        
+        """
 
         self.train_iter = iter(self.train_queue)
         self.valid_iter = iter(self.valid_queue)
@@ -210,6 +210,9 @@ class DartsWrapper:
       objs = utils.AvgrageMeter()
       top1 = utils.AvgrageMeter()
       top5 = utils.AvgrageMeter()
+      import numpy as np
+      preds = np.asarray([])
+      targets = np.asarray([])
 
       weights = self.get_weights_from_arch(arch)
       self.set_model_weights(weights)
@@ -248,9 +251,33 @@ class DartsWrapper:
         top1.update(prec1.data, n)
         top5.update(prec5.data, n)
         
+        _, predicted = torch.max(logits.data, 1)
+        preds = np.concatenate((preds,predicted.cpu().numpy().ravel()))
+        targets = np.concatenate((targets,target.cpu().numpy().ravel()))
+        
         if step % self.args.report_freq == 0:
           logging.info('valid %03d %e %f %f', step, objs.avg, top1.avg, top5.avg)
-
+      
+    
+      print(preds.shape)
+      print(targets.shape)
+      print('np.unique(targets):',np.unique(targets))
+      print('np.unique(preds): ',np.unique(preds))
+      from sklearn.metrics import classification_report
+      from sklearn.metrics import accuracy_score
+      print(accuracy_score(targets, preds))
+      cr = classification_report(targets, preds,output_dict= True)
+      a1,a2,a3 = cr['macro avg']['f1-score'] ,cr['macro avg']['precision'],cr['macro avg']['recall'] 
+      topover = (a1+a2+a3)/3 
+      print(classification_report(targets, preds))
+      from sklearn.metrics import balanced_accuracy_score
+      from sklearn.metrics import accuracy_score
+      print(balanced_accuracy_score(targets, preds))
+      print(accuracy_score(targets, preds))
+      from sklearn.metrics import confusion_matrix
+      matrix = confusion_matrix(targets, preds)
+      print(matrix.diagonal()/matrix.sum(axis=1))
+      print(matrix)
       return 1-top1.avg
 
     def save(self):
