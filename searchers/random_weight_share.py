@@ -89,6 +89,8 @@ class Random_NAS:
             sample_vals = []
             for _ in range(1000):
                 arch = self.model.sample_arch()
+                print('arch:',arch)
+                #print('geno:',self.model.genotype())
                 try:
                     ppl = self.model.evaluate(arch)
                 except Exception as e:
